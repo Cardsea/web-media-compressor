@@ -139,7 +139,7 @@ The app is built with vanilla HTML, CSS, and JavaScript - easy to customize!
 - **Web APIs**: File API, Blob API, URL API
 - **No dependencies** except FFmpeg WebAssembly
 
-## 🎉 Created by Cardiff (Cardsea)
+## 🎉 Created by Cardsea
 
 A web companion to the desktop Video Compressor application!
 
