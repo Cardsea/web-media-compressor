@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🖼️ Image Compressor - Cardiff's Media Suite</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <nav class="breadcrumb">
+                <a href="../" class="breadcrumb-link"><i class="fas fa-home"></i> Media Suite</a>
+                <span class="breadcrumb-separator">•</span>
+                <span class="breadcrumb-current">Image Compressor</span>
+            </nav>
+            <h1>🖼️ Image Compressor</h1>
+            <p class="subtitle">Optimize images with precision - by Cardiff (Cardsea)</p>
+        </header>
+
+        <main>
+            <!-- File Selection Section -->
+            <section class="card">
+                <h2><i class="fas fa-images"></i> File Selection</h2>
+                <div class="file-input-container">
+                    <input type="file" id="imageInput" accept="image/*" multiple hidden>
+                    <button id="selectFileBtn" class="btn btn-primary">
+                        <i class="fas fa-folder-open"></i> Select Image Files
+                    </button>
+                    <div id="fileInfo" class="file-info">No files selected</div>
+                    <div id="imagePreview" class="image-preview"></div>
+                </div>
+            </section>
+
+            <!-- Compression Settings Section -->
+            <section class="card">
+                <h2><i class="fas fa-cogs"></i> Compression Settings</h2>
+                
+                <div class="settings-grid">
+                    <div class="setting-group">
+                        <label for="qualityRange">Quality Level:</label>
+                        <div class="size-control">
+                            <div class="dial-container">
+                                <input type="range" id="qualityRange" min="10" max="100" value="80" class="dial">
+                                <div class="dial-display">
+                                    <span id="qualityDisplay">80%</span>
+                                </div>
+                            </div>
+                            <input type="number" id="qualityInput" min="10" max="100" value="80" class="size-input">
+                            <span class="unit">%</span>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <label for="formatSelect">Output Format:</label>
+                        <select id="formatSelect" class="quality-select">
+                            <option value="jpeg">JPEG (Smaller size)</option>
+                            <option value="png">PNG (Lossless)</option>
+                            <option value="webp">WebP (Modern)</option>
+                            <option value="original">Keep Original</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label for="resizeToggle">Resize Images:</label>
+                        <div class="resize-controls">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="resizeToggle">
+                                <span class="checkmark"></span>
+                                Enable resizing
+                            </label>
+                            <div id="resizeOptions" class="resize-options">
+                                <input type="number" id="maxWidth" placeholder="Max width" min="100" max="4000" value="1920">
+                                <span>×</span>
+                                <input type="number" id="maxHeight" placeholder="Max height" min="100" max="4000" value="1080">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <label for="compressionMode">Compression Mode:</label>
+                        <select id="compressionMode" class="quality-select">
+                            <option value="balanced">Balanced (Recommended)</option>
+                            <option value="quality">Prioritize Quality</option>
+                            <option value="size">Prioritize Size</option>
+                            <option value="speed">Prioritize Speed</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Progress Section -->
+            <section class="card">
+                <h2><i class="fas fa-chart-line"></i> Compression Progress</h2>
+                <div class="progress-container">
+                    <div id="progressBar" class="progress-bar">
+                        <div id="progressFill" class="progress-fill"></div>
+                        <span id="progressText" class="progress-text">Ready to compress</span>
+                    </div>
+                    <div id="statusText" class="status-text">Select image files to get started</div>
+                    <div id="compressionStats" class="compression-stats"></div>
+                </div>
+            </section>
+
+            <!-- Action Buttons -->
+            <section class="actions">
+                <button id="compressBtn" class="btn btn-success" disabled>
+                    <i class="fas fa-compress-alt"></i> Start Compression
+                </button>
+                <button id="cancelBtn" class="btn btn-danger" disabled>
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button id="downloadAllBtn" class="btn btn-download" style="display: none;">
+                    <i class="fas fa-download"></i> Download All Compressed Images
+                </button>
+                <button id="clearBtn" class="btn btn-secondary">
+                    <i class="fas fa-trash"></i> Clear All
+                </button>
+            </section>
+
+            <!-- Results Section -->
+            <section class="card" id="resultsSection" style="display: none;">
+                <h2><i class="fas fa-check-circle"></i> Compression Results</h2>
+                <div id="resultsContainer" class="results-container"></div>
+            </section>
+
+            <!-- Instructions -->
+            <section class="card instructions">
+                <h3><i class="fas fa-info-circle"></i> Instructions</h3>
+                <ol>
+                    <li>Select one or multiple image files (JPEG, PNG, WebP supported)</li>
+                    <li>Adjust quality level (higher = better quality, larger size)</li>
+                    <li>Choose output format and optional resizing</li>
+                    <li>Select compression mode based on your priority</li>
+                    <li>Click 'Start Compression' to begin batch processing</li>
+                </ol>
+                <div class="tips">
+                    <h4><i class="fas fa-lightbulb"></i> Pro Tips:</h4>
+                    <ul>
+                        <li><strong>JPEG:</strong> Best for photos with many colors</li>
+                        <li><strong>PNG:</strong> Best for graphics, logos, transparent images</li>
+                        <li><strong>WebP:</strong> Modern format with better compression</li>
+                        <li><strong>Quality 80-90%:</strong> Good balance of size and quality</li>
+                        <li><strong>Resizing:</strong> Reduce dimensions for web use (1920×1080 recommended)</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Cardiff (Cardsea) - Image Compressor</p>
+            <p>
+                <a href="../" class="footer-link">← Back to Media Suite</a> • 
+                <a href="../vid/" class="footer-link">Video Compressor</a>
+            </p>
+        </footer>
+    </div>
+
+    <script src="script.js" type="module"></script>
+</body>
+</html> 

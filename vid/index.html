@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎬 Video Compressor - Cardiff's Media Suite</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <nav class="breadcrumb">
+                <a href="../" class="breadcrumb-link"><i class="fas fa-home"></i> Media Suite</a>
+                <span class="breadcrumb-separator">•</span>
+                <span class="breadcrumb-current">Video Compressor</span>
+            </nav>
+            <h1>🎬 Video Compressor</h1>
+            <p class="subtitle">Compress videos with precision - by Cardiff (Cardsea)</p>
+        </header>
+
+        <main>
+            <!-- File Selection Section -->
+            <section class="card">
+                <h2><i class="fas fa-file-video"></i> File Selection</h2>
+                <div class="file-input-container">
+                    <input type="file" id="videoInput" accept="video/*" hidden>
+                    <button id="selectFileBtn" class="btn btn-primary">
+                        <i class="fas fa-folder-open"></i> Select Video File
+                    </button>
+                    <div id="fileInfo" class="file-info">No file selected</div>
+                </div>
+            </section>
+
+            <!-- Compression Settings Section -->
+            <section class="card">
+                <h2><i class="fas fa-cogs"></i> Compression Settings</h2>
+                
+                <div class="settings-grid">
+                    <div class="setting-group">
+                        <label for="sizeRange">Target File Size:</label>
+                        <div class="size-control">
+                            <div class="dial-container">
+                                <input type="range" id="sizeRange" min="1" max="1000" value="100" class="dial">
+                                <div class="dial-display">
+                                    <span id="sizeDisplay">100 MB</span>
+                                </div>
+                            </div>
+                            <input type="number" id="sizeInput" min="1" max="1000" value="100" class="size-input">
+                            <span class="unit">MB</span>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <label for="qualitySelect">Quality Preset:</label>
+                        <select id="qualitySelect" class="quality-select">
+                            <option value="ultrafast">Ultra Fast</option>
+                            <option value="superfast">Super Fast</option>
+                            <option value="veryfast">Very Fast</option>
+                            <option value="faster">Faster</option>
+                            <option value="fast">Fast</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="slow">Slow</option>
+                            <option value="slower">Slower</option>
+                            <option value="veryslow">Very Slow</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Progress Section -->
+            <section class="card">
+                <h2><i class="fas fa-chart-line"></i> Compression Progress</h2>
+                <div class="progress-container">
+                    <div id="progressBar" class="progress-bar">
+                        <div id="progressFill" class="progress-fill"></div>
+                        <span id="progressText" class="progress-text">Ready to compress</span>
+                    </div>
+                    <div id="statusText" class="status-text">Select a video file to get started</div>
+                </div>
+            </section>
+
+            <!-- Action Buttons -->
+            <section class="actions">
+                <button id="compressBtn" class="btn btn-success" disabled>
+                    <i class="fas fa-rocket"></i> Start Compression
+                </button>
+                <button id="cancelBtn" class="btn btn-danger" disabled>
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <a id="downloadBtn" class="btn btn-download" style="display: none;">
+                    <i class="fas fa-download"></i> Download Compressed Video
+                </a>
+            </section>
+
+            <!-- Instructions -->
+            <section class="card instructions">
+                <h3><i class="fas fa-info-circle"></i> Instructions</h3>
+                <ol>
+                    <li>Select a video file using the button above</li>
+                    <li>Adjust the target file size using the dial (1 MB to 1 GB)</li>
+                    <li>Choose quality preset (slower = better quality)</li>
+                    <li>Click 'Start Compression' to begin</li>
+                </ol>
+                <p class="note">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Note:</strong> This web version uses WebAssembly for compression. 
+                    Large files may take some time to process.
+                </p>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Cardiff (Cardsea) - Video Compressor</p>
+            <p>
+                <a href="../" class="footer-link">← Back to Media Suite</a> • 
+                <a href="../img/" class="footer-link">Image Compressor</a>
+            </p>
+        </footer>
+    </div>
+
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.10/dist/esm/index.js" type="module"></script>
+    <script src="script.js" type="module"></script>
+</body>
+</html> 
