@@ -367,6 +367,10 @@ footer {
     text-align: center;
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 400px;
 }
 
 .nav-card:hover {
@@ -414,6 +418,12 @@ footer {
     width: 16px;
 }
 
+.nav-card-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
 .nav-card-button {
     background: linear-gradient(45deg, #4CAF50, #8BC34A);
     color: white;
@@ -425,6 +435,7 @@ footer {
     justify-content: center;
     gap: 10px;
     transition: all 0.3s ease;
+    margin-top: auto;
 }
 
 .nav-card:hover .nav-card-button {

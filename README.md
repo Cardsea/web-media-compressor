@@ -42,16 +42,23 @@ A modern web-based media compression suite that runs entirely in your browser! C
 
 ### 🛠️ Run Locally (Developers)
 Want to modify the code? Run it locally:
-
+- Clone the repository
 ```bash
-# Clone the repository
+
 git clone https://github.com/Cardsea/web-media-compressor.git
 cd web-media-compressor
-
-# Serve with Python
+```
+- Serve with Python
+```bash
 python -m http.server 8000
-
-# Or with Node.js
+```
+> if this does not work try 
+> ```bash
+> # Serve with Python3
+> python3 -m http.server 8000
+> ```
+- Or with Node.js
+```bash
 npx http-server
 ```
 
