@@ -98,57 +98,74 @@ header h1 {
     color: #cccccc;
 }
 
-/* Size Control */
-.size-control {
+/* Slider Control */
+.slider-control {
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 15px;
 }
 
-.dial-container {
-    position: relative;
-    width: 150px;
-    height: 150px;
-}
-
-.dial {
+.slider {
     width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: conic-gradient(from 0deg, #4CAF50 0%, #8BC34A 100%);
+    height: 8px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    outline: none;
     appearance: none;
     cursor: pointer;
-    outline: none;
+    transition: background 0.3s ease;
 }
 
-.dial::-webkit-slider-thumb {
+.slider:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.slider::-webkit-slider-thumb {
     appearance: none;
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: #ffffff;
+    background: linear-gradient(45deg, #4CAF50, #8BC34A);
     cursor: pointer;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
+    border: 2px solid #ffffff;
+    transition: all 0.3s ease;
 }
 
-.dial-display {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 10px;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 1.1rem;
+.slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.6);
+}
+
+.slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #4CAF50, #8BC34A);
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
+    border: 2px solid #ffffff;
+    transition: all 0.3s ease;
+}
+
+.slider::-moz-range-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.6);
+}
+
+.slider-value {
     text-align: center;
-    min-width: 80px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #4CAF50;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    border: 1px solid rgba(76, 175, 80, 0.3);
 }
 
-.size-input {
-    width: 80px;
+.slider-input {
+    width: 100px;
     padding: 8px;
     border: 1px solid #555555;
     border-radius: 6px;
@@ -156,11 +173,7 @@ header h1 {
     color: white;
     text-align: center;
     font-size: 1rem;
-}
-
-.unit {
-    color: #cccccc;
-    font-weight: 600;
+    margin: 0 auto;
 }
 
 /* Quality Select */
