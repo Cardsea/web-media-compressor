@@ -1,5 +1,4 @@
-import { FFmpeg } from '@ffmpeg/ffmpeg';
-import { toBlobURL } from '@ffmpeg/util';
+// FFmpeg loaded from UMD bundle via script tag
 
 class VideoCompressor {
     constructor() {
@@ -98,7 +97,7 @@ class VideoCompressor {
         try {
             this.statusText.textContent = 'Loading FFmpeg WebAssembly...';
             
-            this.ffmpeg = new FFmpeg();
+            this.ffmpeg = new FFmpeg.FFmpeg();
             
             this.ffmpeg.on('log', ({ message }) => {
                 console.log(message);
@@ -113,8 +112,8 @@ class VideoCompressor {
 
             const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm';
             await this.ffmpeg.load({
-                coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-                wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+                coreURL: await FFmpeg.toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+                wasmURL: await FFmpeg.toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
             });
 
             this.isLoaded = true;
