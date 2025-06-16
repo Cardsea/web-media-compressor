@@ -25,11 +25,11 @@
             <section class="card">
                 <h2><i class="fas fa-file-video"></i> File Selection</h2>
                 <div class="file-input-container">
-                    <input type="file" id="videoInput" accept="video/*" hidden>
+                    <input type="file" id="videoInput" accept="video/*" multiple hidden>
                     <button id="selectFileBtn" class="btn btn-primary">
-                        <i class="fas fa-folder-open"></i> Select Video File
+                        <i class="fas fa-folder-open"></i> Select Video Files
                     </button>
-                    <div id="fileInfo" class="file-info">No file selected</div>
+                    <div id="fileInfo" class="file-info">No files selected</div>
                 </div>
             </section>
 
@@ -95,15 +95,15 @@
             <section class="card instructions">
                 <h3><i class="fas fa-info-circle"></i> Instructions</h3>
                 <ol>
-                    <li>Select a video file using the button above</li>
-                    <li>Adjust the target file size using the dial (1 MB to 1 GB)</li>
-                    <li>Choose quality preset (slower = better quality)</li>
-                    <li>Click 'Start Compression' to begin</li>
+                    <li>Select one or multiple video files using the button above</li>
+                    <li>Adjust the target compression using the slider</li>
+                    <li>Choose quality preset (slower = better compression)</li>
+                    <li>Click 'Start Compression' to begin batch processing</li>
                 </ol>
                 <p class="note">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <strong>Note:</strong> This web version uses WebAssembly for compression. 
-                    Large files may take some time to process.
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Note:</strong> This version creates preview images from videos. 
+                    For full video compression, consider the desktop version.
                 </p>
             </section>
         </main>
@@ -117,7 +117,6 @@
         </footer>
     </div>
 
-    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.6/dist/umd/ffmpeg.js"></script>
     <script src="script.js"></script>
 </body>
 </html> 
