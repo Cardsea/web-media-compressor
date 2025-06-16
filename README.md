@@ -1,41 +1,58 @@
-# Video Compressor - Web Edition
+# 🌐 Web Media Compressor Suite
 
-A modern web-based video compression tool that runs entirely in your browser! No server required - all processing happens client-side using FFmpeg WebAssembly.
+A modern web-based media compression suite that runs entirely in your browser! Compress videos and images with professional precision - no downloads or installations required.
+
+## 🔥 **USE THE LIVE VERSION** 
+
+**👉 Visit: https://web-media-compressor.pages.dev/ 👈**
+
+✨ **Ready to use immediately - no setup required!**
 
 ## 🌟 Features
 
-- 🎬 **Universal Format Support** - Compress any video format
-- 🎯 **Precise Size Control** - Set target size from 1 MB to 1 GB with an intuitive dial
-- ⚡ **Quality Presets** - Choose from Ultra Fast to Very Slow compression
-- 📊 **Real-time Progress** - Watch compression progress in real-time
-- 🎨 **Modern UI** - Beautiful dark theme with smooth animations
-- 📱 **Responsive Design** - Works on desktop, tablet, and mobile
-- 🔒 **Privacy First** - All processing happens in your browser
-- 🖱️ **Drag & Drop** - Simply drag videos onto the page
-- ❌ **Cancellable** - Stop compression anytime
+### 🎬 Video Compressor
+- **Universal Format Support** - Compress any video format
+- **Precise Size Control** - Set target size from 1 MB to 1 GB
+- **Quality Presets** - Choose from Ultra Fast to Very Slow compression
+- **FFmpeg Powered** - Professional-grade video processing
+
+### 🖼️ Image Compressor  
+- **Batch Processing** - Compress multiple images at once
+- **Multiple Formats** - JPEG, PNG, WebP support with format conversion
+- **Quality Control** - Fine-tune compression with real-time preview
+- **Smart Resizing** - Automatic dimension optimization for web use
+
+### ✨ Universal Features
+- **100% Browser-Based** - No uploads, complete privacy
+- **Modern Interface** - Beautiful dark theme with smooth sliders
+- **Responsive Design** - Works perfectly on all devices
+- **Drag & Drop** - Simply drag files onto the page
+- **Real-time Progress** - Watch compression progress live
 
 ## 🚀 Quick Start
 
-### Option 1: Direct Usage
-1. Open `index.html` in any modern web browser
-2. Wait for FFmpeg to load (first time only)
-3. Select or drag a video file
-4. Adjust target size and quality
-5. Click "Start Compression"
-6. Download your compressed video!
+### 🌐 Use the Live Website (Recommended)
+**Just visit: https://web-media-compressor.pages.dev/**
 
-### Option 2: Web Server (Recommended)
-For best performance, serve the files from a web server:
+1. **Choose your tool**: Image or Video Compressor
+2. **Upload files**: Drag & drop or click to browse
+3. **Adjust settings**: Quality, format, size controls
+4. **Compress**: Click start and watch the progress
+5. **Download**: Get your optimized files instantly!
+
+### 🛠️ Run Locally (Developers)
+Want to modify the code? Run it locally:
 
 ```bash
-# Using Python
+# Clone the repository
+git clone https://github.com/Cardsea/web-media-compressor.git
+cd web-media-compressor
+
+# Serve with Python
 python -m http.server 8000
 
-# Using Node.js (http-server)
+# Or with Node.js
 npx http-server
-
-# Using PHP
-php -S localhost:8000
 ```
 
 Then visit `http://localhost:8000`
@@ -83,21 +100,21 @@ Then visit `http://localhost:8000`
 - **Close other browser tabs** for better performance
 - **Use Chrome** for optimal WebAssembly performance
 
-## 🚀 Deployment
+## 🔗 Official Links
 
-### GitHub Pages
-1. Upload files to a GitHub repository
-2. Enable GitHub Pages in repository settings
-3. Your app will be available at `https://username.github.io/repository-name`
+- 🌐 **Live Website**: https://web-media-compressor.pages.dev/
+- 📦 **Source Code**: https://github.com/Cardsea/web-media-compressor
+- 🖥️ **Desktop Version**: https://github.com/Cardsea/desktop-media-compressor
 
-### Netlify
-1. Drag the `web-version` folder to [Netlify Drop](https://app.netlify.com/drop)
-2. Get instant deployment with custom URL
+## 🚀 For Developers: Deployment Options
 
-### Vercel
-1. Install Vercel CLI: `npm i -g vercel`
-2. Run `vercel` in the web-version directory
-3. Follow deployment prompts
+### Cloudflare Pages (Current)
+This project is deployed on Cloudflare Pages for optimal performance.
+
+### Other Options
+- **Netlify**: Drag folder to [Netlify Drop](https://app.netlify.com/drop)
+- **Vercel**: Run `vercel` in project directory
+- **GitHub Pages**: Enable Pages in repository settings
 
 ## 🛠️ Customization
 
@@ -141,8 +158,13 @@ The app is built with vanilla HTML, CSS, and JavaScript - easy to customize!
 
 ## 🎉 Created by Cardsea
 
-A web companion to the desktop Video Compressor application!
+Professional media compression tools for the modern web. Part of a complete suite including desktop applications.
+
+### 🔗 Quick Access
+- **🌐 Live Website**: https://web-media-compressor.pages.dev/
+- **🖼️ Image Compressor**: https://web-media-compressor.pages.dev/img/
+- **🎬 Video Compressor**: https://web-media-compressor.pages.dev/vid/
 
 ---
 
-**Enjoy compressing videos right in your browser!** 🎬✨ 
+**Ready to compress? Visit the live website and start optimizing your media!** ✨ 
