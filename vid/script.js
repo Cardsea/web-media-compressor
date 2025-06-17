@@ -1,14 +1,56 @@
-// Simple Video Compressor - Canvas-based approach for better compatibility
+// Real Video Compressor using FFmpeg.js
+// This actually compresses videos, not just creates previews!
 
 class VideoCompressor {
     constructor() {
         this.selectedFiles = [];
         this.compressedResults = [];
         this.isProcessing = false;
+        this.ffmpeg = null;
         
         this.initializeElements();
         this.bindEvents();
-        this.updateStatus('Ready! Select video files to get started.');
+        this.initFFmpeg();
+        this.updateStatus('Loading FFmpeg... This may take a moment on first load.');
+    }
+
+    async initFFmpeg() {
+        try {
+            // Import FFmpeg dynamically
+            const { FFmpeg } = await import('https://unpkg.com/@ffmpeg/ffmpeg@0.12.10/dist/esm/index.js');
+            const { fetchFile, toBlobURL } = await import('https://unpkg.com/@ffmpeg/util@0.12.1/dist/esm/index.js');
+            
+            this.ffmpeg = new FFmpeg();
+            this.fetchFile = fetchFile;
+            
+            // Load FFmpeg with logging
+            this.ffmpeg.on("log", ({ message }) => {
+                console.log(message);
+                if (message.includes('frame=')) {
+                    // Extract progress from FFmpeg logs
+                    const match = message.match(/time=(\d{2}):(\d{2}):(\d{2})/);
+                    if (match && this.currentVideoDuration) {
+                        const currentTime = parseInt(match[1]) * 3600 + parseInt(match[2]) * 60 + parseInt(match[3]);
+                        const progress = Math.min(95, (currentTime / this.currentVideoDuration) * 100);
+                        this.updateProgress(progress, `Compressing... ${Math.round(progress)}%`);
+                    }
+                }
+            });
+
+            // Load core with CDN URLs for better reliability
+            const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm';
+            await this.ffmpeg.load({
+                coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+                wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+            });
+
+            this.updateStatus('FFmpeg loaded! Ready to compress videos for real!');
+            console.log('FFmpeg loaded successfully');
+            
+        } catch (error) {
+            console.error('FFmpeg loading error:', error);
+            this.updateStatus('Error loading FFmpeg. Please refresh the page.');
+        }
     }
 
     initializeElements() {
@@ -105,8 +147,8 @@ class VideoCompressor {
 
         this.selectedFiles = videoFiles;
         this.updateFileInfo();
-        this.compressBtn.disabled = false;
-        this.updateStatus('Ready to compress videos!');
+        this.compressBtn.disabled = !this.ffmpeg;
+        this.updateStatus(this.ffmpeg ? 'Ready to compress videos!' : 'Loading FFmpeg...');
     }
 
     updateFileInfo() {
@@ -122,7 +164,7 @@ class VideoCompressor {
     }
 
     async startCompression() {
-        if (!this.selectedFiles.length || this.isProcessing) return;
+        if (!this.selectedFiles.length || this.isProcessing || !this.ffmpeg) return;
 
         this.isProcessing = true;
         this.compressBtn.disabled = true;
@@ -134,30 +176,30 @@ class VideoCompressor {
         
         try {
             for (let i = 0; i < this.selectedFiles.length; i++) {
-                if (!this.isProcessing) break; // Check for cancellation
+                if (!this.isProcessing) break;
                 
                 const file = this.selectedFiles[i];
-                const progress = Math.round(((i) / this.selectedFiles.length) * 100);
+                const baseProgress = (i / this.selectedFiles.length) * 100;
                 
-                this.updateProgress(progress, `Processing ${file.name}...`);
+                this.updateProgress(baseProgress, `Processing ${file.name}...`);
                 
-                const result = await this.compressVideo(file, settings);
+                const result = await this.compressVideoWithFFmpeg(file, settings, i);
                 if (result) {
                     this.compressedResults.push(result);
                 }
             }
             
             if (this.isProcessing && this.compressedResults.length > 0) {
-                this.updateProgress(100, 'Compression completed!');
-                this.updateStatus(`Successfully compressed ${this.compressedResults.length} video(s)!`);
+                this.updateProgress(100, 'Real compression completed!');
+                this.updateStatus(`Successfully compressed ${this.compressedResults.length} video(s) with FFmpeg!`);
                 this.showDownloadOptions();
             } else {
                 this.updateStatus('No videos were compressed successfully.');
             }
             
         } catch (error) {
-            console.error('Compression error:', error);
-            this.updateStatus('Compression failed. Please try again.');
+            console.error('FFmpeg compression error:', error);
+            this.updateStatus('FFmpeg compression failed. Check console for details.');
             this.updateProgress(0, 'Compression failed');
         } finally {
             this.isProcessing = false;
@@ -170,110 +212,115 @@ class VideoCompressor {
         const targetSizeMB = parseInt(this.sizeRange.value);
         const quality = this.qualitySelect.value;
         
-        // Map quality preset to compression factor
-        const qualityMap = {
-            'ultrafast': 0.9,
-            'superfast': 0.8,
-            'veryfast': 0.7,
-            'faster': 0.6,
-            'fast': 0.5,
-            'medium': 0.4,
-            'slow': 0.3,
-            'slower': 0.2,
-            'veryslow': 0.1
-        };
-        
         return {
             targetSizeMB,
-            compressionFactor: qualityMap[quality] || 0.4,
-            quality
+            targetSizeBytes: targetSizeMB * 1024 * 1024,
+            preset: quality
         };
     }
 
-    async compressVideo(file, settings) {
+    async getVideoDuration(file) {
         return new Promise((resolve) => {
             const video = document.createElement('video');
-            video.muted = true;
-            video.crossOrigin = 'anonymous';
-            
+            video.preload = 'metadata';
             video.onloadedmetadata = () => {
-                try {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    
-                    // Calculate new dimensions based on compression factor
-                    const scaleFactor = Math.sqrt(settings.compressionFactor);
-                    canvas.width = Math.floor(video.videoWidth * scaleFactor);
-                    canvas.height = Math.floor(video.videoHeight * scaleFactor);
-                    
-                    // Create a single frame representation (poster frame)
-                    video.currentTime = video.duration * 0.1; // 10% into video
-                    
-                    video.onseeked = () => {
-                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                        
-                        // Convert to blob
-                        canvas.toBlob((blob) => {
-                            if (blob) {
-                                const result = {
-                                    original: file,
-                                    compressed: blob,
-                                    originalSize: file.size,
-                                    compressedSize: blob.size,
-                                    filename: `${file.name.split('.')[0]}_preview.jpg`,
-                                    compressionRatio: ((file.size - blob.size) / file.size * 100).toFixed(1),
-                                    dimensions: `${canvas.width}×${canvas.height}`,
-                                    type: 'preview'
-                                };
-                                resolve(result);
-                            } else {
-                                resolve(null);
-                            }
-                        }, 'image/jpeg', 0.8);
-                    };
-                } catch (error) {
-                    console.error('Error processing video:', error);
-                    resolve(null);
-                }
+                resolve(video.duration);
             };
-            
-            video.onerror = () => {
-                console.error('Error loading video:', file.name);
-                resolve(null);
-            };
-            
             video.src = URL.createObjectURL(file);
         });
     }
 
-    showDownloadOptions() {
-        // For now, show a simple info message
-        const totalSaved = this.compressedResults.reduce((sum, r) => sum + (r.originalSize - r.compressedSize), 0);
-        
-        this.updateStatus(`Generated ${this.compressedResults.length} preview(s). Total space if compressed: ${this.formatFileSize(totalSaved)}`);
-        
-        // Create a simple download for the first result as demo
-        if (this.compressedResults.length > 0) {
-            const result = this.compressedResults[0];
-            const url = URL.createObjectURL(result.compressed);
-            this.downloadBtn.href = url;
-            this.downloadBtn.download = result.filename;
-            this.downloadBtn.style.display = 'inline-flex';
-            this.downloadBtn.textContent = `📸 Download Preview (${result.filename})`;
+    async compressVideoWithFFmpeg(file, settings, index) {
+        try {
+            // Get video duration for progress tracking
+            this.currentVideoDuration = await this.getVideoDuration(file);
+            
+            const inputName = `input${index}.${file.name.split('.').pop()}`;
+            const outputName = `output${index}_compressed.mp4`;
+            
+            // Write input file to FFmpeg filesystem
+            await this.ffmpeg.writeFile(inputName, await this.fetchFile(file));
+            
+            // Calculate bitrate to reach target size
+            const targetBitrate = Math.max(100, Math.floor((settings.targetSizeBytes * 8) / this.currentVideoDuration / 1000));
+            
+            // Build FFmpeg command for real compression
+            const ffmpegArgs = [
+                '-i', inputName,
+                '-c:v', 'libx264',           // Use H.264 codec
+                '-preset', settings.preset,   // Use quality preset
+                '-b:v', `${targetBitrate}k`,  // Set target bitrate
+                '-maxrate', `${Math.floor(targetBitrate * 1.2)}k`,
+                '-bufsize', `${Math.floor(targetBitrate * 2)}k`,
+                '-c:a', 'aac',               // Audio codec
+                '-b:a', '128k',              // Audio bitrate
+                '-movflags', '+faststart',    // Web optimization
+                '-y',                        // Overwrite output
+                outputName
+            ];
+            
+            console.log('Running FFmpeg with args:', ffmpegArgs);
+            
+            // Run FFmpeg compression
+            await this.ffmpeg.exec(ffmpegArgs);
+            
+            // Read the compressed file
+            const data = await this.ffmpeg.readFile(outputName);
+            const blob = new Blob([data], { type: 'video/mp4' });
+            
+            // Clean up temporary files
+            await this.ffmpeg.deleteFile(inputName);
+            await this.ffmpeg.deleteFile(outputName);
+            
+            const originalSize = file.size;
+            const compressedSize = blob.size;
+            const compressionRatio = ((originalSize - compressedSize) / originalSize * 100).toFixed(1);
+            
+            console.log(`Compression complete: ${this.formatFileSize(originalSize)} → ${this.formatFileSize(compressedSize)} (${compressionRatio}% reduction)`);
+            
+            return {
+                name: file.name.replace(/\.[^/.]+$/, '_compressed.mp4'),
+                blob: blob,
+                originalSize: originalSize,
+                compressedSize: compressedSize,
+                compressionRatio: compressionRatio
+            };
+            
+        } catch (error) {
+            console.error(`Error compressing ${file.name}:`, error);
+            return null;
         }
+    }
+
+    showDownloadOptions() {
+        this.downloadBtn.style.display = 'block';
+        this.downloadBtn.onclick = () => {
+            this.downloadCompressedVideos();
+        };
+    }
+
+    downloadCompressedVideos() {
+        this.compressedResults.forEach((result, index) => {
+            const url = URL.createObjectURL(result.blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = result.name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
     }
 
     cancelCompression() {
         this.isProcessing = false;
         this.updateStatus('Compression cancelled');
         this.updateProgress(0, 'Cancelled');
-        this.compressBtn.disabled = false;
-        this.cancelBtn.disabled = true;
     }
 
     updateProgress(percentage, text) {
-        this.progressFill.style.width = `${percentage}%`;
-        this.progressText.textContent = text;
+        this.progressFill.style.width = `${Math.max(0, Math.min(100, percentage))}%`;
+        this.progressText.textContent = text || `${Math.round(percentage)}%`;
     }
 
     updateStatus(message) {
@@ -289,7 +336,7 @@ class VideoCompressor {
     }
 }
 
-// Initialize the application when DOM is loaded
+// Initialize the compressor when page loads
 document.addEventListener('DOMContentLoaded', () => {
     new VideoCompressor();
 });
